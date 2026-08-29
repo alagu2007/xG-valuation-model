@@ -37,5 +37,5 @@ In the final phase, I aggregated shot-level xG predictions across the full seaso
 
 
 
-
+![Scatter plot of transfer fee versus predicted xG, colored by over/underperformance](transfer_value_scatter.png)
 ![Interactive shot map with hover tooltip showing shot outcome, xG, and coordinates](interactive_shotmap.png)
