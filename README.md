@@ -36,6 +36,22 @@ Phase 4: Analysis & Storytelling
 In the final phase, I aggregated shot-level xG predictions across the full season to evaluate net finishing performance (xG_diff = Goals − predicted xG) against actual transfer fees paid for a curated cohort of 14 Premier League forwards from the 2025 summer transfer window. This revealed striking market inefficiencies, separating undervalued, clinical finishers from high-volume underperformers. To effectively communicate these insights, I developed both static pitch maps using matplotlib/mplsoccer and custom, fully responsive interactive shot maps in Plotly, featuring hover tooltips and dynamic marker styling to contextualize individual shot selection.
 
 
+## Visualizations
 
-![Scatter plot of transfer fee versus predicted xG, colored by over/underperformance](transfer_value_scatter.png)
+**Below:** an interactive shot map for Liam Delap (hover to see xG, outcome, and coordinates per shot), and a transfer value scatter plot comparing fee paid against predicted xG, colored by over/underperformance.
+
 ![Interactive shot map with hover tooltip showing shot outcome, xG, and coordinates](interactive_shotmap.png)
+![Scatter plot of transfer fee versus predicted xG, colored by over/underperformance](transfer_value_scatter_v2.png)
+
+## Repo Structure
+
+The repository is structured to keep the end-to-end pipeline reproducible, containing the raw data extract, the unified Python workflow, and generated visual assets:
+
+```text
+├── .gitignore                    # Prevents unnecessary cache and environment files from being tracked
+├── season_shots.json             # Scraped raw shot-level dataset across all 380 Premier League matches
+├── xg_model.py                   # Complete, self-contained Python script executing all 4 phases
+├── interactive_shotmap.png       # Screenshot demonstrating the custom Plotly interactive pitch map and tooltips
+├── transfer_value_scatter.png    # Screenshot visualizing the transfer fee vs. xG_diff market analysis
+└── README.md                     # Project documentation, methodology, and case study
+```
