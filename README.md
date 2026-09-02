@@ -1,4 +1,4 @@
-
+## Premier League Expected Goals (xG) & Player Valuation Model
 
 The main aim of this project is to design a complete machine learning pipeline with raw shot data from Understat to calculate an expected goals (xG) score for non-penalty shots across the Premier League. The baseline classification model performed with an ROC-AUC of 0.7504, thus providing good discrimination and a good calibration of the goal probability distribution from 0.01 to 0.99. When coupled with player value, the model identifies opportunities in the market for inefficiencies (the "underperforming" Liam Delap (-3.91 xG_diff) against the "elite efficiency" João Pedro (+3.95 xG_diff) for instance).
 
@@ -8,8 +8,8 @@ The main aim of this project is to design a complete machine learning pipeline w
 Key Project Highlights
 * End-to-end data pipeline, built from an undocumented API: Reverse-engineered Understat's internal data endpoints — identifying the correct Referer and X-Requested-With headers required to bypass access restrictions — to scrape shot-level data across all 380 matches of the 2025/26 Premier League season (9,524 shots total).
 * Geometry-based feature engineering: Derived shot distance and shot angle from raw pitch coordinates using Pythagorean and arctan2-based trigonometry, rather than relying on pre-existing xG values, to build features genuinely predictive of goal probability.
-* Rigorous model comparison: Benchmarked Logistic Regression against a HistGradientBoostingClassifier on a stratified train/test split; Logistic Regression performed best (ROC-AUC 0.7504, log-loss 0.2806), and its predictions correlated at 0.7558 (Pearson) with Understat's own published xG model.
-* Real-world value analysis: Applied the trained model to 14 verified summer 2025 Premier League transfers, comparing actual transfer fees against xG_diff (goals scored minus predicted xG) to identify likely over- and under-performing signings — e.g. Liam Delap (£30m, -3.91 xG_diff) vs. João Pedro (£55m, +3.95 xG_diff).
+*  Model comparison: The model was rigorously tested by comparing the Logistic Regression, which had the highest ROC-AUC (0.7504) and lowest log-loss (0.2806), against a stratified train/test split, and against the predictions of Understat's own published xG model, which correlated at 0.7558 (Pearson) with Logistic Regression.
+* Real-world value analysis: Applied the trained model to 14 confirmed 2025 transfer events from the Premier League to compare the actual transfer value with xG_diff (actual goals scored minus predicted xG) to see whether signings were likely to be over or undervalued — such as Liam Delap (£30m, -3.91 xG_diff) vs João Pedro (£55m, +3.95 xG_diff).
 * Custom interactive visualization: Built an interactive Plotly shot map from scratch (no pre-built pitch library), including manually-derived pitch geometry, hover tooltips showing shot-level xG and outcome, and correctly scaled coordinate systems.
 
 
@@ -55,3 +55,10 @@ The repository is structured to keep the end-to-end pipeline reproducible, conta
 ├── transfer_value_scatter.png    # Screenshot visualizing the transfer fee vs. xG_diff market analysis
 └── README.md                     # Project documentation, methodology, and case study
 ```
+
+## Future Improvements
+
+* Advanced Defensive Context: While the model effectively leverages shot geometry (distance, angle), it currently lacks freeze-frame data. Integrating 360-degree tracking or event data that includes defender proximity and goalkeeper positioning would significantly refine the xG predictions.
+* Environment Resolution & XGBoost Integration: Due to local environment dependency conflicts, XGBoost was left out of the final algorithm benchmarking. Resolving these to properly test XGBoost alongside HistGradientBoostingClassifier and the top-performing LogisticRegression model could unlock further performance gains.
+* Expanded Transfer Market Analysis: Scaling the data pipeline to ingest multiple seasons or other Top 5 European leagues would expand the sample size. This would allow for more robust, cross-market efficiency comparisons beyond just the 14 Premier League forwards in the 2025 summer window.
+* Interactive Dashboard Deployment: Transitioning the Plotly visualizations from standalone script outputs into a deployed web application (e.g., using Streamlit). This would allow users to dynamically toggle between different players, seasons, and their corresponding interactive shot maps.
