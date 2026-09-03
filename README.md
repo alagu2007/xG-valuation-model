@@ -1,7 +1,6 @@
 ## Premier League Expected Goals (xG) & Player Valuation Model
 
-The main aim of this project is to design a complete machine learning pipeline with raw shot data from Understat to calculate an expected goals (xG) score for non-penalty shots across the Premier League. The baseline classification model performed with an ROC-AUC of 0.7504, thus providing good discrimination and a good calibration of the goal probability distribution from 0.01 to 0.99. When coupled with player value, the model identifies opportunities in the market for inefficiencies (the "underperforming" Liam Delap (-3.91 xG_diff) against the "elite efficiency" João Pedro (+3.95 xG_diff) for instance).
-
+The main aim of this project is to design a complete machine learning pipeline with raw shot data from Understat to calculate an expected goals (xG) score for non-penalty shots across the Premier League. The selected Logistic Regression model achieved an ROC-AUC of 0.7504, providing strong discrimination and a well-calibrated goal probability distribution from 0.01 to 0.99. Pair this with the market value of the players, and it becomes clear that there are definite recruitment inefficiencies in the organisation (such as the underachieving Liam Delap (-3.91 xG_diff) vs the elite efficient João Pedro (+3.95 xG_diff)).
 
  
 
@@ -9,7 +8,7 @@ The main aim of this project is to design a complete machine learning pipeline w
 
 * End-to-end data pipeline, built from an undocumented API: Reverse-engineered Understat's internal data endpoints — identifying the correct Referer and X-Requested-With headers required to bypass access restrictions — to scrape shot-level data across all 380 matches of the 2025/26 Premier League season (9,524 shots total).
 * Geometry-based feature engineering: Derived shot distance and shot angle from raw pitch coordinates using Pythagorean and arctan2-based trigonometry, rather than relying on pre-existing xG values, to build features genuinely predictive of goal probability.
-*  Model comparison: The model was rigorously tested by comparing the Logistic Regression, which had the highest ROC-AUC (0.7504) and lowest log-loss (0.2806), against a stratified train/test split, and against the predictions of Understat's own published xG model, which correlated at 0.7558 (Pearson) with Logistic Regression.
+* Model comparison is rigorous, using Logistic Regression, a benchmarking model compared to a `HistGradientBoostingClassifier` model on a stratified train/test split. Logistic Regression was the top model (ROC-AUC 0.7504, log-loss 0.2806) and its predictions were found to be highly correlated with those of Understat's own published xG model (Pearson 0.7558).
 * Real-world value analysis: Applied the trained model to 14 confirmed 2025 transfer events from the Premier League to compare the actual transfer value with xG_diff (actual goals scored minus predicted xG) to see whether signings were likely to be over or undervalued — such as Liam Delap (£30m, -3.91 xG_diff) vs João Pedro (£55m, +3.95 xG_diff).
 * Custom interactive visualization: Built an interactive Plotly shot map from scratch (no pre-built pitch library), including manually-derived pitch geometry, hover tooltips showing shot-level xG and outcome, and correctly scaled coordinate systems.
 
@@ -35,7 +34,7 @@ Rather than relying on Understat's proprietary xG values, I built the model's pr
 
 **Phase 3: Model Training, Comparison and Evaluation**
 
-To preserve the natural distribution of goals to non-goals, I utilized a stratified 80/20 train/test split before benchmarking two distinct algorithms: a `HistGradientBoostingClassifier` and a standard `LogisticRegression`. Despite the tree-based model's ability to handle non-linear interactions, the simpler Logistic Regression outperformed it, achieving an ROC-AUC of 0.7504 and a log-loss of 0.2806. This highlights a key domain insight: the relationship between shot geometry (distance, angle) and goal probability is fundamentally smooth and monotonic. Logistic Regression naturally captures this gradual decay, whereas tree-based models can overfit the inherent noise of football data by creating rigid, step-like decision boundaries.
+To ensure that the distribution of goals to non-goals was maintained, I ran an 80-20 training-test split before running two different algorithms: an 80/20 train/test split of the `HistGradientBoostingClassifier` and the standard `LogisticRegression`. Although the tree model was able to capture non-linear interactions, it performed worse than the Logistic Regression model, which obtained 0.7504 on the ROC-AUC and 0.2806 on the Log-Loss. This is an important domain knowledge: The probability of a shot to make a goal is smooth and monotonic in terms of the distance and angle of the shot. Logistic Regression naturally captures this gradual decay, while tree based models have the potential to over fit the inherent noise in football data, giving rise to the creation of hard, step-like decision boundaries.
 
 **Phase 4: Analysis & Storytelling**
 
@@ -64,7 +63,7 @@ The repository is structured to keep the end-to-end pipeline reproducible, conta
 
 ## Future Improvements
 
-* Advanced Defensive Context: While the model effectively leverages shot geometry (distance, angle), it currently lacks freeze-frame data. Integrating 360-degree tracking or event data that includes defender proximity and goalkeeper positioning would significantly refine the xG predictions.
+* Advanced Defensive Context: This model utilizes shot geometry (Distance, Angle) and it currently does not have freeze frame data. A 360-degree tracking or event data that would cover the proximity to defenders and positioning of the goalkeepers would greatly improve the accuracy of xG predictions.
 * Environment Resolution & XGBoost Integration: Due to local environment dependency conflicts, XGBoost was left out of the final algorithm benchmarking. Resolving these to properly test XGBoost alongside HistGradientBoostingClassifier and the top-performing LogisticRegression model could unlock further performance gains.
 * Expanded Transfer Market Analysis: Scaling the data pipeline to ingest multiple seasons or other Top 5 European leagues would expand the sample size. This would allow for more robust, cross-market efficiency comparisons beyond just the 14 Premier League forwards in the 2025 summer window.
-* Interactive Dashboard Deployment: Transitioning the Plotly visualizations from standalone script outputs into a deployed web application (e.g., using Streamlit). This would allow users to dynamically toggle between different players, seasons, and their corresponding interactive shot maps.
+*  Interactive Dashboard Deployment: Converting the Plotly visualizations from script output to a deployed web application (e.g., with Streamlit). This would mean that players could switch between seasons and players and corresponding interactive maps.
