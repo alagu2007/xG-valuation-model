@@ -57,7 +57,7 @@ The repository is structured to keep the end-to-end pipeline reproducible, conta
 ├── season_shots.json             # Scraped raw shot-level dataset across all 380 Premier League matches
 ├── xg_model.py                   # Complete, self-contained Python script executing all 4 phases
 ├── interactive_shotmap.png       # Screenshot demonstrating the custom Plotly interactive pitch map and tooltips
-├── transfer_value_scatter.png    # Screenshot visualizing the transfer fee vs. xG_diff market analysis
+├── transfer_value_scatter_v2.png    # Screenshot visualizing the transfer fee vs. xG_diff market analysis
 └── README.md                     # Project documentation, methodology, and case study
 ```
 
