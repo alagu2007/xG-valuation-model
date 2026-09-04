@@ -67,3 +67,25 @@ The repository is structured to keep the end-to-end pipeline reproducible, conta
 * Environment Resolution & XGBoost Integration: Due to local environment dependency conflicts, XGBoost was left out of the final algorithm benchmarking. Resolving these to properly test XGBoost alongside HistGradientBoostingClassifier and the top-performing LogisticRegression model could unlock further performance gains.
 * Expanded Transfer Market Analysis: Scaling the data pipeline to ingest multiple seasons or other Top 5 European leagues would expand the sample size. This would allow for more robust, cross-market efficiency comparisons beyond just the 14 Premier League forwards in the 2025 summer window.
 *  Interactive Dashboard Deployment: Converting the Plotly visualizations from script output to a deployed web application (e.g., with Streamlit). This would mean that players could switch between seasons and players and corresponding interactive maps.
+
+
+## Appendix: Glossary & Key Concepts
+
+If you are unfamiliar with football analytics or machine learning terminology, here is a quick guide to the concepts and metrics used throughout this project:
+
+### Football Analytics Terms
+* **Expected Goals (xG):** A probability score between 0.00 and 1.00 assigned to every shot, representing how likely an average Premier League player is to score from that position and situation. A tap-in from two yards might be 0.85 xG (85% chance), while a 35-yard speculative strike might be 0.02 xG (2% chance).
+* **xG Difference (xG\_diff = Goals - xG):** How effective the team is at finishing the ball. 
+  * If the numbers are **positive** ($+3.95$), then the player scored more goals than the average, which can either be because of clinical finishing or a stretch of good form.
+  * A **negative number** ($-3.91$) means the player failed to score a chance that would have been normally netted by the average attacker.
+* **Freeze-Frame / 360° Tracking Data:** High-resolution spatial data which shows all 22 players' and keeper's precise positions at the moment of the shot. Only basic event data contains information on where the shooter was - not how many defenders were blocking the path.
+
+
+### Machine Learning & Statistical Terms
+* **ROC-AUC (Receiver Operating Characteristic - Area Under Curve):** A metric from 0.5 to 1.0 measuring how well a model distinguishes between two classes (goals vs. non-goals). 
+  * $0.50$ = Random guessing (a coin flip).
+  * $0.75+$ = Strong discrimination (the model reliably assigns higher probabilities to real goals than to misses).
+* **Log-Loss (Cross-Entropy Loss):** A measure of how accurately calibrated the model's predicted probabilities are. It heavily penalizes overconfident wrong answers (e.g., predicting a 99% chance of scoring on a shot that gets skied into the stands). Lower is better.
+* **Stratified Train/Test Split:** Only ~10-11% of the shots in football lead to a goal (imbalanced dataset). You need to have a stratified split, both in your 80% training set and your 20% test set, so that there is no sampling bias.
+* **Monotonic Relationship:** A consistent direction of change. In football Physics, the longer the distance to goal, the lower the likelihood of scoring – strictly speaking. The natural decreasing curve is modeled by Logistic Regression while the decision tree models may generate artificial, sharp jumps.
+* **Euclidean Distance & $\arctan2$ Angle:** Mathematical tools for computing physical geometry from some raw $(X, Y)$ coordinates: physical distance to goal center (in straight line), and goal face width seen by shooter.
